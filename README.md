@@ -2,16 +2,8 @@
   <img src="assets/logo.svg" alt="JellyMusicDiscovery" width="180"/>
 </div>
 
-<div align="center">
-  
-  <b>This took a whole lot of testing and debugging, but we made it!. if you enjoyed the project, please feel free to buy me a coffee! </b>
-  
-  </div>
+<div align="center"# JellyMusicDiscovery</div>
 
-  
-  <div align="center">
-  <img src=".github/BuyMeACoffee.png" alt="JellyMusicDiscovery" width="180"/>
-</div>
 
 # JellyMusicDiscovery
 
@@ -24,6 +16,18 @@ This has been tested and music-wise it works wonderfully with the client "Finer"
 and if you want to also watch the videos, the Jellyfin app itself does very well.
 
 This plugin works seamlessly and compliments [Gelato](https://github.com/lostb1t/Gelato) quite nicely!
+
+##
+<div align="center">
+  
+  <b>This took a whole lot of testing and debugging, but we made it! if you enjoyed the project, please feel free to buy me a coffee! </b>
+  
+  </div>
+
+  
+  <div align="center">
+  <img src=".github/BuyMeACoffee.png" alt="JellyMusicDiscovery" width="180"/>
+</div>
 
 ---
 ## What this plugin and its companions do
