@@ -25,8 +25,10 @@ This plugin works seamlessly and compliments [Gelato](https://github.com/lostb1t
   </div>
 
   
-  <div align="center">
-  <img src=".github/BuyMeACoffee.png" alt="JellyMusicDiscovery" width="180"/>
+ <div align="center">
+  <a href="https://buymeacoffee.com/drgit_stone" target="_blank">
+    <img src=".github/BuyMeACoffee.png" alt="JellyMusicDiscovery" width="180"/>
+  </a>
 </div>
 
 ---
