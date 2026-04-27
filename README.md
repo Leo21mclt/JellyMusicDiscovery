@@ -2,6 +2,17 @@
   <img src="assets/logo.svg" alt="JellyMusicDiscovery" width="180"/>
 </div>
 
+<div align="center">
+  
+  <b>This took a whole lot of testing and debugging, but we made it!. if you enjoyed the project, please feel free to buy me a coffee! </b>
+  
+  </div>
+
+  
+  <div align="center">
+  <img src=".github/BuyMeACoffee.png" alt="JellyMusicDiscovery" width="180"/>
+</div>
+
 # JellyMusicDiscovery
 
 A Jellyfin plugin that turns Jellyfin's music section into a discovery
