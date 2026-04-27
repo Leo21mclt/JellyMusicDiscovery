@@ -138,8 +138,8 @@ proper instead of a discovery hit.
 ## install — what to do
 
 **!!! Because there are so many pieces to this puzzle it is easy for some things not to click. 
-I really recommend you download Claude Code and have it do the installation, or SSH into your raspberry pi and do the installation.
-All you need to do is provide Claude the instructions, the files and the location of your library.
+I really recommend you download Claude Code and have it do the installation, or have it SSH into your raspberry pi and do the installation.
+All you need to do is provide Claude the instructions (this readme), the files, the location of your library and the location of your plugin folder.
 Generally it will help you with updating the version of YT-dlp which gets deprecated sosmewhat often, 
 and making sure all permissions are up and running properly !!!**
 
