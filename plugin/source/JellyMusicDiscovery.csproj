@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>JellyMusicDiscovery</AssemblyName>
+    <RootNamespace>JellyMusicDiscovery</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Version>0.1.0.0</Version>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <!-- Privacy: don't bake the host's absolute build path into the
+         compiled DLL. By default .NET emits a PDB-reference path like
+         "/Users/<you>/.../obj/Release/net9.0/JellyMusicDiscovery.pdb"
+         into the assembly metadata, which leaks the developer's home
+         path + username when the plugin is shipped to others. Strip
+         all debug info from the distribution build (this disables
+         line numbers in stack traces — fine for a release build;
+         contributors debug locally with a Debug build instead).
+         Combined with Deterministic=true, the .dll is byte-identical
+         across machines for the same source. -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <Deterministic>true</Deterministic>
+    <!-- PathMap is a belt-and-braces remap so if any path slips through
+         a different code path (resource embedding, etc.) it lands as
+         "src/..." instead of the absolute host path. -->
+    <PathMap>$(MSBuildProjectDirectory)=src</PathMap>
+    <!-- Force runtime deps (e.g. TagLibSharp.dll) into the build output so
+         the StripUnneededDlls target below can decide what to ship. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jellyfin.Common" Version="10.11.2" />
+    <PackageReference Include="Jellyfin.Controller" Version="10.11.2" />
+    <PackageReference Include="Jellyfin.Model" Version="10.11.2" />
+    <!-- Read audio tags (artist/album/track) from completed slskd downloads
+         so the post-download organizer can move files to the right
+         {Artist}/{Album} folder in the music library. -->
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configPage.html" />
+    <EmbeddedResource Include="Frontend\**\*" />
+  </ItemGroup>
+
+  <Target Name="StripUnneededDlls" AfterTargets="Build">
+    <!-- Jellyfin already provides these in its installation, so we exclude
+         them from the plugin output to keep the zip small AND avoid
+         loader conflicts (shipping a different version of e.g. ICU4N
+         than what Jellyfin's host loaded breaks runtime). TagLibSharp
+         is NOT bundled by Jellyfin — keep it. -->
+    <ItemGroup>
+      <_FilesToDelete Include="$(OutputPath)Jellyfin.*.dll" />
+      <_FilesToDelete Include="$(OutputPath)MediaBrowser.*.dll" />
+      <_FilesToDelete Include="$(OutputPath)Microsoft.*.dll" />
+      <_FilesToDelete Include="$(OutputPath)System.*.dll" />
+      <_FilesToDelete Include="$(OutputPath)Emby.*.dll" />
+      <_FilesToDelete Include="$(OutputPath)ICU4N*.dll" />
+      <_FilesToDelete Include="$(OutputPath)BitFaster.*.dll" />
+      <_FilesToDelete Include="$(OutputPath)Polly*.dll" />
+      <_FilesToDelete Include="$(OutputPath)NEbml.*.dll" />
+      <_FilesToDelete Include="$(OutputPath)J2N.dll" />
+      <_FilesToDelete Include="$(OutputPath)Diacritics.dll" />
+    </ItemGroup>
+    <Delete Files="@(_FilesToDelete)" />
+  </Target>
+
+</Project>

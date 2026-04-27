@@ -1,0 +1,47 @@
+# slskd-organizer — auto-sorts slskd downloads into the music library.
+#
+# Watches /portainer/Downloads (host) for new audio files, reads tags,
+# moves them to /portainer/Music/{Artist}/{Album}/{NN - Title}.{ext}.
+# Runs alongside slskd; doesn't need to know anything about Jellyfin or
+# the discovery plugin.
+#
+# Deploy:
+#   docker compose -f /portainer/Files/AppData/Stacks/slskd-organizer/docker-compose.yml up -d --build
+#
+# Then check logs:
+#   docker logs -f slskd-organizer
+
+services:
+  slskd-organizer:
+    build: .
+    image: slskd-organizer:latest
+    container_name: slskd-organizer
+    restart: unless-stopped
+    volumes:
+      # Source: where slskd writes downloads. Read-write because we MOVE
+      # (not copy), and we also cleanup empty subdirs.
+      - /portainer/Downloads:/data/downloads:rw
+      # Destination: the music library Jellyfin scans.
+      - /portainer/Music:/data/music:rw
+    environment:
+      DOWNLOADS_ROOT: /data/downloads
+      MUSIC_ROOT: /data/music
+      POLL_INTERVAL_SEC: "30"
+      # Optional: when set, the organizer POSTs /Library/Refresh on
+      # Jellyfin after each scan that moved at least one file, so newly
+      # downloaded tracks show up immediately rather than waiting for
+      # Jellyfin's scheduled scan. Leave both blank to skip and rely on
+      # the schedule.
+      #
+      # JELLYFIN_URL: container-name or LAN address Jellyfin listens on
+      #               (no trailing slash). On the same docker network you
+      #               can use "http://jellyfin:8096"; from a separate
+      #               docker network use the host LAN IP, e.g.
+      #               "http://<your-host-lan-ip>:8096".
+      # JELLYFIN_API_KEY: create one in Jellyfin admin →
+      #                   Dashboard → API Keys → "+", give it a name.
+      # Replace with your Jellyfin's LAN URL (no trailing slash) and an API
+      # key from Dashboard → API Keys. Leave blank to skip Jellyfin pings
+      # entirely and rely on its scheduled scan instead.
+      JELLYFIN_URL: ""
+      JELLYFIN_API_KEY: ""

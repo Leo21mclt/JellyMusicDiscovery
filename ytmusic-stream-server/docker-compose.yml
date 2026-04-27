@@ -1,0 +1,11 @@
+services:
+  ytmusic-stream-server:
+    build: .
+    image: ytmusic-stream-server:latest
+    container_name: ytmusic-stream-server
+    restart: unless-stopped
+    ports:
+      - "8077:8077"
+    volumes:
+      # Bind app.py so we can iterate without rebuilding the image.
+      - ./app.py:/app/app.py:ro

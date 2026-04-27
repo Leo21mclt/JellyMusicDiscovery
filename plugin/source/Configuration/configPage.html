@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Music Discovery</title>
+</head>
+<body>
+<div id="MusicDiscoveryConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox,emby-select">
+  <div data-role="content">
+    <div class="content-primary">
+      <form id="MusicDiscoveryConfigForm">
+
+        <h2>Music Discovery</h2>
+        <p>Inject MusicBrainz search results into Jellyfin's music library. Album requests route to Lidarr; track requests stream on demand from slskd.</p>
+
+        <div class="checkboxContainer">
+          <label>
+            <input is="emby-checkbox" type="checkbox" id="EnableSearchInjection" />
+            <span>Enable search injection</span>
+          </label>
+        </div>
+
+        <h3>Library</h3>
+        <div class="inputContainer">
+          <label class="inputLabel" for="MusicLibraryRoot">Music library root path</label>
+          <input is="emby-input" type="text" id="MusicLibraryRoot" />
+          <div class="fieldDescription">Absolute path to your Jellyfin music library root. Discovery downloads are written to a subfolder of this path.</div>
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="DiscoveryDownloadSubdir">Discovery download subfolder</label>
+          <input is="emby-input" type="text" id="DiscoveryDownloadSubdir" />
+        </div>
+
+        <h3>Search source</h3>
+        <div class="inputContainer">
+          <label class="inputLabel" for="SearchSource">Source</label>
+          <select is="emby-select" id="SearchSource">
+            <option value="deezer">Deezer (fast, no key, recommended)</option>
+            <option value="musicbrainz">MusicBrainz (canonical, 1 req/sec)</option>
+            <option value="both">Both (Deezer first, then MB)</option>
+          </select>
+          <div class="fieldDescription">Deezer has no auth, no User-Agent, and feels instant. MusicBrainz is rate-limited but has better coverage of niche/obscure releases.</div>
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="SearchLimit">Search results per type</label>
+          <input is="emby-input" type="number" id="SearchLimit" min="1" max="25" />
+        </div>
+
+        <h3>MusicBrainz (used at request time + as fallback)</h3>
+        <div class="inputContainer">
+          <label class="inputLabel" for="MusicBrainzUserAgent">User-Agent</label>
+          <input is="emby-input" type="text" id="MusicBrainzUserAgent" />
+          <div class="fieldDescription">MB requires a descriptive UA with contact info, e.g. "JellyMusicDiscovery/0.1 ( your.email@example.com )". Only used if you pick MusicBrainz or Both above, or for canonical-id lookups when requesting albums by MBID.</div>
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="MusicBrainzCacheTtlSeconds">Cache TTL (seconds)</label>
+          <input is="emby-input" type="number" id="MusicBrainzCacheTtlSeconds" min="60" />
+        </div>
+
+        <h3>Lidarr (album requests)</h3>
+        <div class="inputContainer">
+          <label class="inputLabel" for="LidarrBaseUrl">Base URL</label>
+          <input is="emby-input" type="text" id="LidarrBaseUrl" />
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="LidarrApiKey">API key</label>
+          <input is="emby-input" type="password" id="LidarrApiKey" />
+        </div>
+        <div class="checkboxContainer">
+          <label>
+            <input is="emby-checkbox" type="checkbox" id="LidarrAddMonitored" />
+            <span>Add albums as monitored</span>
+          </label>
+        </div>
+        <div class="checkboxContainer">
+          <label>
+            <input is="emby-checkbox" type="checkbox" id="LidarrSearchOnAdd" />
+            <span>Trigger search immediately on add</span>
+          </label>
+        </div>
+
+        <h3>YT Music stream server (instant playback)</h3>
+        <div class="inputContainer">
+          <label class="inputLabel" for="YtMusicStreamServerUrl">Base URL</label>
+          <input is="emby-input" type="text" id="YtMusicStreamServerUrl" placeholder="http://&lt;host&gt;:8077" />
+          <div class="fieldDescription">Companion service that resolves track names to YouTube Music audio URLs via yt-dlp. When set, clicking play on a discovery track redirects to this server which 302s to a direct CDN audio URL — instant playback. Leave blank to fall back to slskd (slow).</div>
+        </div>
+
+        <h3>slskd (single-track downloads, fallback)</h3>
+        <div class="inputContainer">
+          <label class="inputLabel" for="SlskdBaseUrl">Base URL</label>
+          <input is="emby-input" type="text" id="SlskdBaseUrl" />
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="SlskdApiKey">API key</label>
+          <input is="emby-input" type="password" id="SlskdApiKey" />
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="PreferredFormats">Preferred formats (comma-separated)</label>
+          <input is="emby-input" type="text" id="PreferredFormats" placeholder="flac,mp3" />
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="MinBitrateKbps">Minimum bitrate (kbps)</label>
+          <input is="emby-input" type="number" id="MinBitrateKbps" min="0" />
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="SlskdSearchTimeoutSeconds">Search timeout (seconds)</label>
+          <input is="emby-input" type="number" id="SlskdSearchTimeoutSeconds" min="2" max="60" />
+        </div>
+        <div class="inputContainer">
+          <label class="inputLabel" for="SlskdMinPeerSpeedKbps">Min peer speed (kbps)</label>
+          <input is="emby-input" type="number" id="SlskdMinPeerSpeedKbps" min="0" />
+        </div>
+
+        <h3>Stub housekeeping</h3>
+        <div class="inputContainer">
+          <label class="inputLabel" for="StubGcMaxAgeHours">GC unrequested stubs after (hours)</label>
+          <input is="emby-input" type="number" id="StubGcMaxAgeHours" min="1" />
+        </div>
+
+        <button is="emby-button" type="submit" class="raised button-submit-block">
+          <span>Save</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+<script type="text/javascript">
+(function () {
+  const PluginId = '7b3a1c84-9a2f-4d66-8c12-5f9a8d7e6b40';
+
+  const fields = [
+    'EnableSearchInjection','MusicLibraryRoot','DiscoveryDownloadSubdir',
+    'SearchSource','SearchLimit',
+    'MusicBrainzUserAgent','MusicBrainzCacheTtlSeconds',
+    'LidarrBaseUrl','LidarrApiKey','LidarrAddMonitored','LidarrSearchOnAdd',
+    'YtMusicStreamServerUrl',
+    'SlskdBaseUrl','SlskdApiKey','PreferredFormats','MinBitrateKbps',
+    'SlskdSearchTimeoutSeconds','SlskdMinPeerSpeedKbps','StubGcMaxAgeHours'
+  ];
+
+  const page = document.querySelector('#MusicDiscoveryConfigPage');
+
+  function load(cfg) {
+    fields.forEach(f => {
+      const el = page.querySelector('#' + f);
+      if (!el) return;
+      const v = cfg[f];
+      if (el.type === 'checkbox') el.checked = !!v;
+      else if (Array.isArray(v)) el.value = v.join(',');
+      else el.value = v ?? '';
+    });
+  }
+
+  function collect(cfg) {
+    fields.forEach(f => {
+      const el = page.querySelector('#' + f);
+      if (!el) return;
+      if (el.type === 'checkbox') cfg[f] = el.checked;
+      else if (f === 'PreferredFormats') cfg[f] = el.value.split(',').map(s => s.trim()).filter(Boolean);
+      else if (el.type === 'number') cfg[f] = parseInt(el.value, 10) || 0;
+      else cfg[f] = el.value;
+    });
+    return cfg;
+  }
+
+  page.addEventListener('pageshow', function () {
+    Dashboard.showLoadingMsg();
+    ApiClient.getPluginConfiguration(PluginId).then(load).finally(Dashboard.hideLoadingMsg);
+  });
+
+  page.querySelector('#MusicDiscoveryConfigForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    Dashboard.showLoadingMsg();
+    ApiClient.getPluginConfiguration(PluginId).then(cfg => {
+      collect(cfg);
+      return ApiClient.updatePluginConfiguration(PluginId, cfg);
+    }).then(Dashboard.processPluginConfigurationUpdateResult).finally(Dashboard.hideLoadingMsg);
+    return false;
+  });
+})();
+</script>
+</div>
+</body>
+</html>

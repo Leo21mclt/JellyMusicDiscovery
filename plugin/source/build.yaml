@@ -1,0 +1,18 @@
+name: "JellyMusicDiscovery"
+guid: "7b3a1c84-9a2f-4d66-8c12-5f9a8d7e6b40"
+version: "0.1.0.0"
+targetAbi: "10.11.6.0"
+framework: "net9.0"
+owner: "self-hosted"
+artifacts:
+  - "JellyMusicDiscovery.dll"
+overview: "Search MusicBrainz inside Jellyfin and request via Lidarr / slskd."
+description: >
+  Adds a MusicBrainz-powered discovery layer to Jellyfin's music library.
+  Search results for content you don't yet own appear inline alongside your
+  library items. Requesting an album triggers Lidarr; playing a single track
+  triggers an on-demand slskd download that streams progressively as it
+  arrives.
+category: "Metadata"
+changelog: >
+  Initial scaffold.

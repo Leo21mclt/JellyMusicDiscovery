@@ -1,0 +1,37 @@
+# Soularr slskd_version_check patch
+#
+# Why: Soularr branches its API call shape on whether slskd's reported
+# version is >= 0.22.2 (the API rev where directory listings became
+# dicts instead of lists). The check parses version with int() and
+# splits on '.', which crashes on slskd builds whose version string
+# isn't strictly semver — e.g. self-built / pre-release tags like
+# "0.0.1.65534-local". When the parse raises, the function returns
+# False and Soularr takes the OLD-API path against a NEW-API server,
+# producing TypeError: directory['files'] every cycle and 0 imports.
+#
+# The fix forces the new-API path. Safe as long as your slskd is
+# >= 0.22.2 (released July 2024); older slskd builds are extremely
+# uncommon at this point.
+#
+# Apply against /app/soularr.py inside the soularr container, OR
+# against your bind-mounted copy. After patching, copy the file
+# back into the container:
+#
+#   docker cp soularr.py.patched soularr:/app/soularr.py
+#   docker restart soularr
+#
+# Or use docker exec + sed in-place (one-liner, no copy back):
+#
+#   docker exec soularr sed -i \
+#     's|return version_tuple >= target_tuple|return True  # forced new-API path|' \
+#     /app/soularr.py
+#   docker restart soularr
+
+--- a/soularr.py
++++ b/soularr.py
+@@ -X,Y +X,Y @@
+ def slskd_version_check(version, target="0.22.2"):
+     version_tuple = tuple(map(int, version.split('.')[:3]))
+     target_tuple = tuple(map(int, target.split('.')[:3]))
+-    return version_tuple >= target_tuple
++    return True  # force new-API path; tolerates non-semver slskd versions
