@@ -149,7 +149,7 @@ proper instead of a discovery hit.
   move/rename + Jellyfin rescan trigger. Significantly more setup
   than the other features — see "Install order" below.
 
-  **I look forward to the open-source evolution of this porject and the wonderful future contributions from the community**
+  **I look forward to the open-source evolution of this project and the wonderful future contributions from the community**
 ---
 
 ## install — what to do
