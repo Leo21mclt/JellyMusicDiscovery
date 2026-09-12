@@ -51,7 +51,7 @@ def yt() -> YTMusic:
 # Other browsers (Chrome/Firefox) support both, so this preference order works
 # universally. Final fallback to "best" handles videos with weird format sets.
 YDL_OPTS = {
-    "cookiefile": "/app/cookies.txt",
+    "cookiefile": "/tmp/cookies.txt",
     "format": "bestaudio[ext=m4a]/bestaudio[acodec^=mp4a]/bestaudio/best",
     "quiet": True,
     "no_warnings": True,
@@ -72,7 +72,7 @@ YDL_OPTS = {
 # We ALWAYS pick avc1/H.264 over VP9 because iOS Safari refuses VP9 and
 # our muxer-copy can't transcode codecs without burning Pi CPU.
 YDL_VIDEO_OPTS = {
-    "cookiefile": "/app/cookies.txt",
+    "cookiefile": "/tmp/cookies.txt",
     "format": (
         "bestvideo[height<=1080][vcodec^=avc1]+bestaudio[acodec^=mp4a]/"
         "bestvideo[height<=720][vcodec^=avc1]+bestaudio[acodec^=mp4a]/"
